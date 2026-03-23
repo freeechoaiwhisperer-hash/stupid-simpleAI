@@ -6,7 +6,7 @@
 import customtkinter as ctk
 from core import config
 from assets.i18n import t, language_options, display_name_to_code, get_language
-from assets.themes import get as get_theme, display_names, name_from_display
+from assets.themes import get as get_theme, display_names
 
 
 class SettingsPanel(ctk.CTkFrame):
@@ -109,7 +109,6 @@ class SettingsPanel(ctk.CTkFrame):
                        t("settings_lang_desc"))
 
         lang_opts  = language_options()
-        lang_codes = [code for code, _ in lang_opts]
         lang_disp  = [disp for _, disp in lang_opts]
 
         current_code = get_language()

@@ -71,7 +71,6 @@ def get_or_create_key(custom_key: Optional[str] = None) -> Optional[bytes]:
     if not CRYPTO_AVAILABLE:
         return None
     if custom_key:
-        from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,

@@ -7,7 +7,6 @@ import customtkinter as ctk
 from core import config, model_manager, tts
 from assets.i18n import t
 import modules
-from core.metadata_stamp import stamp_response, should_stamp
 
 
 class ChatPanel(ctk.CTkFrame):

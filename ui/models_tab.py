@@ -553,7 +553,9 @@ class ModelsPanel(ctk.CTkFrame):
                 results = r.json()
                 self.after(0, lambda: self._render_hf(results, query))
             except Exception as e:
-                self.after(0, lambda: self._hf_error(str(e)))
+                # Capture before Python 3 deletes 'e' at end of except block
+                err = str(e)
+                self.after(0, lambda msg=err: self._hf_error(msg))
             finally:
                 self._hf_loading = False
 
@@ -673,8 +675,10 @@ class ModelsPanel(ctk.CTkFrame):
                 ]
                 win.after(0, lambda: _show(files))
             except Exception as e:
-                win.after(0, lambda: status.configure(
-                    text=f"❌  {e}",
+                # Capture before Python 3 deletes 'e' at end of except block
+                err = str(e)
+                win.after(0, lambda msg=err: status.configure(
+                    text=f"❌  {msg}",
                     text_color=T["text_error"]))
 
         def _show(files: list):

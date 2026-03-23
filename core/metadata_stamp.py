@@ -14,7 +14,6 @@
 import hashlib
 import datetime
 import secrets
-import os
 from typing import Optional
 
 # Session ID — unique per app launch, never stored permanently

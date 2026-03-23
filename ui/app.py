@@ -4,13 +4,11 @@
 # ============================================================
 
 import random
-import threading
 
 import customtkinter as ctk
 
-from core import config, hardware, model_manager, tts
+from core import config, model_manager, tts
 from core import logger, encryption
-from core.metadata_stamp import stamp_response, should_stamp
 import modules
 import modules.video   as video_module
 import modules.agent   as agent_module

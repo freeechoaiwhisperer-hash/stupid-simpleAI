@@ -259,7 +259,6 @@ class TermsDialog(ctk.CTkToplevel):
         ).pack(side="right", padx=8)
 
     def _on_checkbox(self):
-        T = self.theme if hasattr(self, "theme") else {}
         if self._agree_var.get():
             self._accept_btn.configure(
                 state="normal",

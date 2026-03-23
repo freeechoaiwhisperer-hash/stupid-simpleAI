@@ -11,7 +11,7 @@ import platform
 import traceback
 import threading
 from datetime import datetime
-from typing import Callable, Optional
+from typing import Callable
 
 CRASH_DIR       = "crash_reports"
 MAX_REPORTS     = 20

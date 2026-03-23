@@ -3,7 +3,6 @@
 #  Splash screen — shown while app initializes
 # ============================================================
 
-import threading
 import customtkinter as ctk
 from assets.i18n import t
 

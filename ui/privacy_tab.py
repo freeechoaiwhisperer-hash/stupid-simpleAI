@@ -3,7 +3,6 @@
 #  Privacy & Security panel
 # ============================================================
 
-import threading
 import customtkinter as ctk
 from core import privacy
 from core.crash_reporter import get_recent, send_anonymous

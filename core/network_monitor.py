@@ -82,7 +82,6 @@ def kill_network(
     Cut ALL internet traffic immediately.
     Uses OS firewall rules — works on Linux, Mac, Windows.
     """
-    global _kill_active
 
     def _kill():
         global _kill_active
@@ -137,7 +136,6 @@ def restore_network(
     on_done: Callable[[bool, str], None] = None,
 ) -> None:
     """Restore normal network access."""
-    global _kill_active
 
     def _restore():
         global _kill_active

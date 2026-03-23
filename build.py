@@ -10,7 +10,6 @@
 #    python build.py linux    # build Linux AppImage via setup.sh
 # ============================================================
 
-import os
 import sys
 import platform
 import subprocess
@@ -83,7 +82,7 @@ def main():
         }.get(system, "linux")
 
     print()
-    print(f"⚒️   FreedomForge AI — Build Helper")
+    print("⚒️   FreedomForge AI — Build Helper")
     print(f"    Target: {target}")
     print()
 

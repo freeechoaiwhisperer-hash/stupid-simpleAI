@@ -4,7 +4,7 @@
 # ============================================================
 
 import threading
-from typing import Callable, Optional
+from typing import Callable
 
 try:
     import pyttsx3
