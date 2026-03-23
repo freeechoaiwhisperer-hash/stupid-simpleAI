@@ -10,15 +10,44 @@ from typing import Callable
 
 MODULE_NAME = "agent"
 
-# Commands that are always blocked regardless of agent mode
-BLOCKED_COMMANDS = [
+# Patterns that are always blocked, regardless of agent mode.
+# Checked against the lower-cased, stripped command string.
+BLOCKED_PATTERNS = [
+    # Destructive deletions
     "rm -rf /",
+    "rm -rf ~",
+    "rm -rf $home",
+    "rm -fr /",
+    "rm -fr ~",
+    # Disk formatting / wiping
     "mkfs",
     "dd if=",
+    "shred",
+    "wipefs",
+    # Fork bomb
     ":(){:|:&};:",
-    "chmod -R 777 /",
+    # Dangerous chmod/chown on root
+    "chmod -r 777 /",
+    "chown -r root /",
+    # Network download execution  — block both http and https
     "wget http",
     "curl http",
+    "wget ftp",
+    "curl ftp",
+    # Process killers
+    "pkill -9",
+    "kill -9 1",
+    "killall",
+    # Privilege escalation helpers
+    "sudo su",
+    "sudo -i",
+    "sudo bash",
+    "sudo sh",
+    # Python/shell self-modifying tricks
+    "os.system",
+    "subprocess.call",
+    "eval(",
+    "exec(",
 ]
 
 _agent_enabled = False
@@ -37,12 +66,13 @@ def is_safe_command(command: str) -> tuple[bool, str]:
     """Check if a command is safe to run. Returns (safe, reason)."""
     cmd_lower = command.lower().strip()
 
-    for blocked in BLOCKED_COMMANDS:
-        if blocked in cmd_lower:
-            return False, f"Command contains blocked pattern: {blocked}"
+    for pattern in BLOCKED_PATTERNS:
+        if pattern in cmd_lower:
+            return False, f"Blocked pattern: '{pattern}'"
 
-    if cmd_lower.startswith("sudo rm"):
-        return False, "Recursive deletion with sudo is blocked"
+    # Block any use of sudo rm (regardless of flags)
+    if "sudo rm" in cmd_lower:
+        return False, "sudo rm is blocked"
 
     return True, ""
 
@@ -68,9 +98,21 @@ def run_command(
             return
 
         try:
+            # Use shell=False with shlex.split() to prevent shell injection.
+            # Fall back to a single-item list if splitting fails (e.g. empty).
+            try:
+                args = shlex.split(command)
+            except ValueError:
+                on_error(f"Could not parse command: {command}")
+                return
+
+            if not args:
+                on_error("Empty command.")
+                return
+
             result = subprocess.run(
-                command,
-                shell=True,
+                args,
+                shell=False,          # No shell — prevents injection
                 capture_output=True,
                 text=True,
                 timeout=30,
@@ -82,6 +124,8 @@ def run_command(
             )
         except subprocess.TimeoutExpired:
             on_error("Command timed out after 30 seconds")
+        except FileNotFoundError:
+            on_error(f"Command not found: {shlex.split(command)[0]}")
         except Exception as e:
             on_error(f"Command failed: {e}")
 

@@ -67,3 +67,8 @@ temp/
 *.dmg
 *.exe
 *.AppImage
+
+# PyInstaller build output
+dist/
+build/
+*.spec.bak

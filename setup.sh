@@ -158,6 +158,7 @@ Type=Application
 Name=FreedomForge AI
 Comment=Free local AI for everyone — Dedicated to Miranda
 Exec=$SCRIPT_DIR/venv/bin/python3 $SCRIPT_DIR/main.py
+Path=$SCRIPT_DIR
 Icon=$SCRIPT_DIR/assets/icon.png
 Terminal=false
 StartupNotify=true

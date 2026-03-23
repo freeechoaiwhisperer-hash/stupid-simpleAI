@@ -824,20 +824,32 @@ class ModelsPanel(ctk.CTkFrame):
 # ── Download window ──────────────────────────────────────────
 
 class DownloadWindow(ctk.CTkToplevel):
+    """
+    Pop-up that downloads a model file with:
+    • A progress bar (0 → 100 %)
+    • Live speed (MB/s) and estimated time remaining
+    • A user-friendly error dialog with Retry / Cancel on failure
+    • Automatic clean-up of partial files if the download fails
+    • Auto-refreshes the parent model list on success
+    """
 
     def __init__(self, parent, model: dict,
                  theme: dict, on_done=None):
         super().__init__(parent)
-        self.on_done = on_done
-        self._q      = queue.Queue()
-        T            = theme
+        self._parent  = parent
+        self.on_done  = on_done
+        self._q       = queue.Queue()
+        self._model   = model
+        self._theme   = theme
+        T             = theme
 
         self.title("Downloading")
-        self.geometry("540x210")
+        self.geometry("560x230")
         self.resizable(False, False)
         self.configure(fg_color=T["bg_panel"])
         self.grab_set()
 
+        # Title
         ctk.CTkLabel(
             self,
             text=f"⬇  {model.get('name', model['filename'])}",
@@ -845,42 +857,54 @@ class DownloadWindow(ctk.CTkToplevel):
             text_color=T["text_primary"],
         ).pack(pady=(22, 4))
 
+        # Progress bar
         self.bar = ctk.CTkProgressBar(
-            self, width=480,
+            self, width=500,
             progress_color=T["accent"],
             fg_color=T["bg_card"],
         )
         self.bar.set(0)
-        self.bar.pack(pady=8)
+        self.bar.pack(pady=(8, 4))
 
+        # Primary status line: "X MB / Y MB  (Z%)"
         self.lbl = ctk.CTkLabel(
             self,
             text=t("models_connecting"),
-            font=("Arial", 11),
+            font=("Arial", 12),
             text_color=T["text_secondary"],
         )
         self.lbl.pack()
+
+        # Secondary line: speed + ETA
+        self.eta_lbl = ctk.CTkLabel(
+            self, text="",
+            font=("Arial", 11),
+            text_color=T["text_dim"],
+        )
+        self.eta_lbl.pack(pady=(2, 0))
 
         ctk.CTkLabel(
             self,
             text=t("models_minimize"),
             font=("Arial", 10),
             text_color=T["text_dim"],
-        ).pack(pady=4)
+        ).pack(pady=(6, 0))
 
         threading.Thread(
             target=self._dl, args=(model,), daemon=True).start()
         self._poll()
 
+    # ── Download thread ──────────────────────────────────────
+
     def _dl(self, model: dict):
+        dest = os.path.join(MODELS_DIR, model["filename"])
         try:
             os.makedirs(MODELS_DIR, exist_ok=True)
-            r     = requests.get(
+            r = requests.get(
                 model["url"], stream=True, timeout=60)
             r.raise_for_status()
             total = int(r.headers.get("content-length", 0))
             done  = 0
-            dest  = os.path.join(MODELS_DIR, model["filename"])
             with open(dest, "wb") as f:
                 for chunk in r.iter_content(chunk_size=65536):
                     f.write(chunk)
@@ -889,36 +913,213 @@ class DownloadWindow(ctk.CTkToplevel):
                         self._q.put(("p", done / total, done, total))
             self._q.put(("done", None))
         except Exception as e:
+            # Clean up any partial file so it doesn't appear as downloaded
+            try:
+                if os.path.exists(dest):
+                    os.remove(dest)
+            except OSError:
+                pass
             self._q.put(("error", str(e)))
 
+    # ── UI polling ───────────────────────────────────────────
+
     def _poll(self):
+        import time
+        # Lazily initialise speed tracking on first call
+        if not hasattr(self, "_dl_start"):
+            self._dl_start   = time.monotonic()
+            self._last_bytes = 0
+            self._last_ts    = self._dl_start
+
         try:
             while True:
                 msg = self._q.get_nowait()
                 if msg[0] == "p":
                     _, pct, done, total = msg
+                    now = time.monotonic()
+
+                    # Update progress bar
                     self.bar.set(pct)
+
+                    # Speed over the last interval
+                    interval = now - self._last_ts
+                    if interval > 0:
+                        speed = (done - self._last_bytes) / interval  # bytes/s
+                    else:
+                        speed = 0
+                    self._last_bytes = done
+                    self._last_ts    = now
+
+                    # Elapsed / ETA
+                    elapsed  = now - self._dl_start
+                    avg_speed = done / elapsed if elapsed > 0 else 0
+                    remaining = total - done
+                    eta_sec   = remaining / avg_speed if avg_speed > 0 else 0
+
+                    # Format sizes
+                    done_mb  = done  / (1024 ** 2)
+                    total_mb = total / (1024 ** 2)
+                    spd_mb   = speed / (1024 ** 2)
+
+                    # ETA string
+                    if eta_sec > 0 and avg_speed > 0:
+                        if eta_sec < 60:
+                            eta_str = f"{eta_sec:.0f}s remaining"
+                        elif eta_sec < 3600:
+                            eta_str = f"{eta_sec/60:.0f}m remaining"
+                        else:
+                            eta_str = f"{eta_sec/3600:.1f}h remaining"
+                    else:
+                        eta_str = "calculating…"
+
                     self.lbl.configure(
-                        text=f"{done/(1024**2):.1f} MB / "
-                             f"{total/(1024**2):.1f} MB  "
-                             f"({pct*100:.1f}%)"
+                        text=f"{done_mb:.1f} MB / {total_mb:.1f} MB"
+                             f"  ({pct * 100:.1f}%)"
                     )
+                    self.eta_lbl.configure(
+                        text=f"{spd_mb:.2f} MB/s  •  {eta_str}"
+                    )
+
                 elif msg[0] == "done":
                     self.bar.set(1.0)
                     self.lbl.configure(text=t("models_complete"))
+                    self.eta_lbl.configure(text="")
                     self.after(1400, self._finish)
                     return
+
                 elif msg[0] == "error":
-                    self.lbl.configure(text=f"❌  {msg[1]}")
+                    self._show_error(msg[1])
                     return
+
         except queue.Empty:
             pass
         self.after(110, self._poll)
 
+    # ── Error dialog ─────────────────────────────────────────
+
+    def _show_error(self, message: str):
+        """Replace window contents with a user-friendly error + retry button."""
+        T = self._theme
+
+        # Clear everything and rebuild
+        for w in self.winfo_children():
+            w.destroy()
+
+        self.geometry("540x240")
+
+        ctk.CTkLabel(
+            self, text="⚠️  Download Failed",
+            font=("Arial", 15, "bold"),
+            text_color=T.get("yellow", "#ffaa00"),
+        ).pack(pady=(26, 6))
+
+        # Show a short, readable error (not a raw Python traceback)
+        short = message[:120] + "…" if len(message) > 120 else message
+        ctk.CTkLabel(
+            self, text=short,
+            font=("Arial", 11),
+            text_color=T["text_secondary"],
+            wraplength=480, justify="center",
+        ).pack(padx=24)
+
+        ctk.CTkLabel(
+            self,
+            text="The partial file has been removed.\n"
+                 "Check your internet connection and try again.",
+            font=("Arial", 11),
+            text_color=T["text_dim"],
+            justify="center",
+        ).pack(pady=(8, 0))
+
+        btn_row = ctk.CTkFrame(self, fg_color="transparent")
+        btn_row.pack(pady=16)
+
+        ctk.CTkButton(
+            btn_row, text="🔄  Retry",
+            width=130, height=36,
+            corner_radius=8,
+            fg_color=T["accent"],
+            hover_color=T["accent_hover"],
+            text_color="#ffffff",
+            command=self._retry,
+        ).pack(side="left", padx=8)
+
+        ctk.CTkButton(
+            btn_row, text="Cancel",
+            width=100, height=36,
+            corner_radius=8,
+            fg_color=T["bg_hover"],
+            hover_color=T["bg_card"],
+            text_color=T["text_secondary"],
+            command=self.destroy,
+        ).pack(side="left", padx=8)
+
+    def _retry(self):
+        """Reset state and restart the download."""
+        # Remove partial attributes so _poll reinitialises timers
+        for attr in ("_dl_start", "_last_bytes", "_last_ts"):
+            try:
+                delattr(self, attr)
+            except AttributeError:
+                pass
+
+        # Clear error UI and rebuild original layout
+        for w in self.winfo_children():
+            w.destroy()
+
+        T = self._theme
+        self.geometry("560x230")
+        self._q = queue.Queue()
+
+        ctk.CTkLabel(
+            self,
+            text=f"⬇  {self._model.get('name', self._model['filename'])}",
+            font=("Arial", 14, "bold"),
+            text_color=T["text_primary"],
+        ).pack(pady=(22, 4))
+
+        self.bar = ctk.CTkProgressBar(
+            self, width=500,
+            progress_color=T["accent"],
+            fg_color=T["bg_card"],
+        )
+        self.bar.set(0)
+        self.bar.pack(pady=(8, 4))
+
+        self.lbl = ctk.CTkLabel(
+            self,
+            text=t("models_connecting"),
+            font=("Arial", 12),
+            text_color=T["text_secondary"],
+        )
+        self.lbl.pack()
+
+        self.eta_lbl = ctk.CTkLabel(
+            self, text="",
+            font=("Arial", 11),
+            text_color=T["text_dim"],
+        )
+        self.eta_lbl.pack(pady=(2, 0))
+
+        ctk.CTkLabel(
+            self,
+            text=t("models_minimize"),
+            font=("Arial", 10),
+            text_color=T["text_dim"],
+        ).pack(pady=(6, 0))
+
+        threading.Thread(
+            target=self._dl, args=(self._model,), daemon=True).start()
+        self._poll()
+
+    # ── Completion ───────────────────────────────────────────
+
     def _finish(self):
+        # Auto-refresh model list in the parent panel
         if self.on_done:
             self.on_done()
         try:
             self.destroy()
         except Exception:
             pass
+

@@ -381,6 +381,7 @@ class SetupWizard(ctk.CTkToplevel):
         ).pack(pady=6)
 
         def _dl():
+            dest = os.path.join(MODELS_DIR, model["filename"])
             try:
                 os.makedirs(MODELS_DIR, exist_ok=True)
                 r     = requests.get(
@@ -388,7 +389,6 @@ class SetupWizard(ctk.CTkToplevel):
                 r.raise_for_status()
                 total = int(r.headers.get("content-length", 0))
                 done  = 0
-                dest  = os.path.join(MODELS_DIR, model["filename"])
                 with open(dest, "wb") as f:
                     for chunk in r.iter_content(chunk_size=65536):
                         f.write(chunk)
@@ -397,6 +397,12 @@ class SetupWizard(ctk.CTkToplevel):
                             self._q.put(("p", done/total, done, total))
                 self._q.put(("done", None))
             except Exception as e:
+                # Remove any partial file so it doesn't appear as downloaded
+                try:
+                    if os.path.exists(dest):
+                        os.remove(dest)
+                except OSError:
+                    pass
                 self._q.put(("error", str(e)))
 
         threading.Thread(target=_dl, daemon=True).start()

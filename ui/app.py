@@ -12,8 +12,9 @@ from core import config, hardware, model_manager, tts
 from core import logger, encryption
 from core.metadata_stamp import stamp_response, should_stamp
 import modules
-import modules.video  as video_module
-import modules.agent  as agent_module
+import modules.video   as video_module
+import modules.agent   as agent_module
+import modules.weather as weather_module
 from assets.i18n   import t, set_language, detect_system_language
 from assets.themes import get as get_theme
 
@@ -44,8 +45,9 @@ class App(ctk.CTk):
         self._theme  = get_theme(theme_name)
 
         # Register modules
-        modules.register("video", video_module)
-        modules.register("agent", agent_module)
+        modules.register("video",   video_module)
+        modules.register("agent",   agent_module)
+        modules.register("weather", weather_module)
 
         # Window
         self.title(f"FreedomForge AI  v{APP_VERSION}")

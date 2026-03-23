@@ -28,6 +28,16 @@ _TRIGGERS = {
         r"\brun\s+this\s+command\b",
         r"\bexecute\s+on\s+my\s+computer\b",
     ],
+    "weather": [
+        r"^/weather\b",
+        r"\bweather\s+(in|for|at)\b",
+        r"\bweather\s+today\b",
+        r"\bwhats?\s+the\s+weather\b",
+        r"\bwhat'?s\s+the\s+weather\b",
+        r"\bhow\s+(hot|cold|warm|cool)\s+is\s+it\b",
+        r"\btemperature\s+in\b",
+        r"\bforecast\s+(in|for)\b",
+    ],
 }
 
 _registry: dict = {}

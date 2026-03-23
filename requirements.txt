@@ -8,3 +8,6 @@ pyttsx3>=2.90
 pyaudio>=0.2.13
 cryptography>=41.0.0
 Pillow>=10.0.0
+
+# Build-time only — uncomment to build Windows/Mac standalone installers
+# pyinstaller>=6.0.0
