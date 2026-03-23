@@ -30,6 +30,15 @@ ENV/
 # Config — contains user preferences, not shared
 config.json
 
+# Encryption key — NEVER commit this, it protects local data
+.forge_key
+
+# Crash reports — may contain system info
+crash_reports/
+
+# Generated launcher
+launch.sh
+
 # OS files
 .DS_Store
 Thumbs.db

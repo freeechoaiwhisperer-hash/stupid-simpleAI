@@ -14,10 +14,17 @@
 import sys
 import os
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Pin the working directory to the folder containing main.py.
+# This ensures config.json, logs/, models/, crash_reports/, and .forge_key
+# always resolve to the right place regardless of *how* the app is launched
+# (terminal, desktop shortcut, double-click, etc.).
+_APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+os.chdir(_APP_ROOT)
+sys.path.insert(0, _APP_ROOT)
 
 from core import logger, config
 from core import encryption, crash_reporter
+
 
 def _bootstrap():
     config.load_config()
@@ -28,11 +35,12 @@ def _bootstrap():
     manual_key = config.get("manual_encryption_key", None)
     encryption.init_encryption(manual_key=manual_key)
 
-_bootstrap()
-
-from ui.app import App
 
 if __name__ == "__main__":
+    _bootstrap()
+
+    from ui.app import App
+
     app = App()
     app.protocol("WM_DELETE_WINDOW", app.on_closing)
     app.mainloop()
