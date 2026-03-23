@@ -102,11 +102,36 @@ Or search HuggingFace directly from inside the app — millions of models availa
 
 ```
 FreedomForgeAI/
-├── main.py              Entry point
-├── core/                AI engine, hardware, config, voice
-├── ui/                  Every screen and panel
-├── modules/             Feature add-ons (video, agent, more coming)
-└── assets/              Icons and static files
+├── main.py                    Entry point — bootstraps and launches
+├── core/                      AI engine, hardware, config, voice, privacy
+│   ├── config.py              Settings load/save
+│   ├── hardware.py            GPU/RAM detection and model recommendations
+│   ├── model_manager.py       Model loading, unloading, streaming inference
+│   ├── logger.py              Rotating file logger
+│   ├── encryption.py          Local data encryption (Fernet)
+│   ├── privacy.py             Privacy facade — VPN, kill switch, connections
+│   ├── network_monitor.py     Network connections and kill switch internals
+│   ├── tts.py                 Voice input (speech recognition) and output (TTS)
+│   ├── metadata_stamp.py      Silent code-generation audit stamps
+│   └── crash_reporter.py      Local crash capture and optional anonymous send
+├── ui/                        Every screen and panel
+│   ├── app.py                 Main application window
+│   ├── splash.py              Startup splash screen
+│   ├── wizard.py              First-run setup wizard
+│   ├── chat.py                Chat panel with streaming
+│   ├── models_tab.py          Model browser and downloader
+│   ├── settings.py            Settings panel (theme, voice, AI)
+│   ├── privacy_tab.py         Privacy & Security panel
+│   ├── terms_tab.py           Terms of Service
+│   └── about.py               About panel
+├── modules/                   Feature add-ons (video, agent, more coming)
+│   ├── __init__.py            Module registry and message router
+│   ├── video.py               Video generation via ComfyUI / Wan2.1
+│   └── agent.py               Computer control / agent module
+└── assets/                    Icons, translations, and themes
+    ├── i18n.py                Translations (English + more coming)
+    ├── themes.py              UI theme definitions
+    └── icon.png               App icon
 ```
 
 Clean, modular, contributor-friendly.

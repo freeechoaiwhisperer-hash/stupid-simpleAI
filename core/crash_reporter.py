@@ -119,7 +119,7 @@ def _prune():
             break
 
 
-def install_handler(app=None):
+def install_global_handler(app=None):
     def _handler(exc_type, exc_val, exc_tb):
         if issubclass(exc_type, KeyboardInterrupt):
             sys.__excepthook__(exc_type, exc_val, exc_tb)
