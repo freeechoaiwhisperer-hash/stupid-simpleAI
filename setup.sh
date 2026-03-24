@@ -84,6 +84,7 @@ pip install \
     pyttsx3 \
     cryptography \
     Pillow \
+    "qrcode[pil]" \
     --quiet
 
 # pyaudio

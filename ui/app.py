@@ -24,6 +24,7 @@ from ui.about       import AboutPanel
 from ui.wizard      import SetupWizard, MIRANDA_QUOTES
 from ui.privacy_tab import PrivacyPanel
 from ui.terms_tab   import TermsPanel, TermsDialog
+from ui.phone_tab   import PhonePanel
 
 APP_VERSION = "0.1.0-alpha"
 
@@ -238,6 +239,7 @@ class App(ctk.CTk):
         nav_items = [
             ("💬", t("nav_chat"),     "Chat"),
             ("📦", t("nav_models"),   "Models"),
+            ("📱", "Phone",           "Phone"),
             ("🔒", "Privacy",         "Privacy"),
             ("⚙️", t("nav_settings"), "Settings"),
             ("📋", "Terms",           "Terms"),
@@ -284,6 +286,7 @@ class App(ctk.CTk):
         self.panels: dict = {}
         self.chat_panel     = ChatPanel(self.content_frame, self, T)
         self.models_panel   = ModelsPanel(self.content_frame, self, T)
+        self.phone_panel    = PhonePanel(self.content_frame, self, T)
         self.privacy_panel  = PrivacyPanel(self.content_frame, self, T)
         self.settings_panel = SettingsPanel(self.content_frame, self, T)
         self.terms_panel    = TermsPanel(self.content_frame, T)
@@ -291,6 +294,7 @@ class App(ctk.CTk):
 
         self.panels["Chat"]     = self.chat_panel
         self.panels["Models"]   = self.models_panel
+        self.panels["Phone"]    = self.phone_panel
         self.panels["Privacy"]  = self.privacy_panel
         self.panels["Settings"] = self.settings_panel
         self.panels["Terms"]    = self.terms_panel
@@ -413,6 +417,7 @@ class App(ctk.CTk):
 
         self.chat_panel     = ChatPanel(self.content_frame, self, T)
         self.models_panel   = ModelsPanel(self.content_frame, self, T)
+        self.phone_panel    = PhonePanel(self.content_frame, self, T)
         self.privacy_panel  = PrivacyPanel(self.content_frame, self, T)
         self.settings_panel = SettingsPanel(self.content_frame, self, T)
         self.terms_panel    = TermsPanel(self.content_frame, T)
@@ -420,6 +425,7 @@ class App(ctk.CTk):
 
         self.panels["Chat"]     = self.chat_panel
         self.panels["Models"]   = self.models_panel
+        self.panels["Phone"]    = self.phone_panel
         self.panels["Privacy"]  = self.privacy_panel
         self.panels["Settings"] = self.settings_panel
         self.panels["Terms"]    = self.terms_panel

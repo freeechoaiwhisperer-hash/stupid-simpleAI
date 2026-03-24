@@ -381,7 +381,7 @@ class SetupWizard(ctk.CTkToplevel):
         ).pack(pady=6)
 
         def _dl():
-            dest = os.path.join(MODELS_DIR, model["filename"])
+            dest = os.path.join(MODELS_DIR, os.path.basename(model["filename"]))
             try:
                 os.makedirs(MODELS_DIR, exist_ok=True)
                 r     = requests.get(

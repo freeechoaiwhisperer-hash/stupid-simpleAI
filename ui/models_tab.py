@@ -17,6 +17,9 @@ from assets.i18n import t
 
 MODELS_DIR = "./models"
 
+# ── Featured models (shown in the first-run wizard and Featured tab) ─────────
+# Only these 4 are bundled as "recommended". Users can browse and download
+# any model from HuggingFace using the Search tab.
 CURATED = [
     {
         "name":     "TinyLlama 1.1B",
@@ -28,67 +31,13 @@ CURATED = [
         "desc": "Tiny but surprisingly capable. Runs on almost anything. Perfect starting point.",
     },
     {
-        "name":     "Phi-2 2.7B",
-        "badge":    "🧠 Smart and compact",
-        "filename": "phi-2.Q4_K_M.gguf",
-        "url":      "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf",
-        "size": "1.6 GB", "ram": "4 GB+",
-        "tags": ["popular", "small", "coding", "chat"],
-        "desc": "Microsoft's compact powerhouse. Excellent at reasoning, coding, and writing.",
-    },
-    {
-        "name":     "Llama 3.2 3B",
-        "badge":    "🦙 Latest from Meta",
-        "filename": "Llama-3.2-3B-Instruct-Q4_K_M.gguf",
-        "url":      "https://huggingface.co/bartowski/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q4_K_M.gguf",
-        "size": "2.0 GB", "ram": "4 GB+",
-        "tags": ["popular", "small", "chat"],
-        "desc": "Meta's latest compact model. Fast, capable, and fully open source.",
-    },
-    {
-        "name":     "Mistral 7B Instruct",
-        "badge":    "⚖️ Best all-rounder",
-        "filename": "mistral-7b-instruct-v0.2.Q4_K_M.gguf",
-        "url":      "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf",
-        "size": "4.1 GB", "ram": "8 GB+",
-        "tags": ["popular", "chat", "large"],
-        "desc": "The gold standard for local AI. Excellent at everything.",
-    },
-    {
-        "name":     "Dolphin Mistral 7B",
-        "badge":    "🐬 Uncensored",
-        "filename": "dolphin-2.2.1-mistral-7b.Q4_K_M.gguf",
-        "url":      "https://huggingface.co/TheBloke/dolphin-2.2.1-mistral-7B-GGUF/resolve/main/dolphin-2.2.1-mistral-7b.Q4_K_M.gguf",
-        "size": "4.1 GB", "ram": "8 GB+",
-        "tags": ["uncensored", "chat", "large"],
-        "desc": "Mistral fine-tuned to never refuse. Loyal, direct, completely open.",
-    },
-    {
-        "name":     "Dolphin Llama 3 8B",
-        "badge":    "🐬 Uncensored + Powerful",
-        "filename": "dolphin-2.9-llama3-8b.Q4_K_M.gguf",
-        "url":      "https://huggingface.co/bartowski/dolphin-2.9-llama3-8b-GGUF/resolve/main/dolphin-2.9-llama3-8b-Q4_K_M.gguf",
-        "size": "4.9 GB", "ram": "10 GB+",
-        "tags": ["uncensored", "chat", "large"],
-        "desc": "Dolphin on Llama 3. Powerful, uncensored, deeply loyal.",
-    },
-    {
-        "name":     "Llama 3.1 8B Instruct",
-        "badge":    "🦙 Most powerful",
-        "filename": "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
-        "url":      "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
-        "size": "4.9 GB", "ram": "10 GB+",
-        "tags": ["popular", "chat", "large"],
-        "desc": "Meta's flagship open source model. State of the art.",
-    },
-    {
-        "name":     "CodeLlama 7B",
-        "badge":    "💻 Coding specialist",
-        "filename": "codellama-7b-instruct.Q4_K_M.gguf",
-        "url":      "https://huggingface.co/TheBloke/CodeLlama-7B-Instruct-GGUF/resolve/main/codellama-7b-instruct.Q4_K_M.gguf",
-        "size": "3.8 GB", "ram": "8 GB+",
-        "tags": ["coding", "large"],
-        "desc": "Fine-tuned specifically for code. Write, debug, and explain in any language.",
+        "name":     "Qwen2.5 7B",
+        "badge":    "🌏 Multilingual powerhouse",
+        "filename": "qwen2.5-7b-instruct-q4_k_m.gguf",
+        "url":      "https://huggingface.co/bartowski/Qwen2.5-7B-Instruct-GGUF/resolve/main/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "size": "4.7 GB", "ram": "8 GB+",
+        "tags": ["multilingual", "chat", "large"],
+        "desc": "Alibaba's multilingual powerhouse. Excellent at chat, reasoning, and many languages.",
     },
     {
         "name":     "DeepSeek Coder 6.7B",
@@ -100,55 +49,19 @@ CURATED = [
         "desc": "DeepSeek's dedicated coding model. Exceptional at writing and reviewing code.",
     },
     {
-        "name":     "Gemma 2 2B",
-        "badge":    "🔵 Google",
-        "filename": "gemma-2-2b-it-Q4_K_M.gguf",
-        "url":      "https://huggingface.co/bartowski/gemma-2-2b-it-GGUF/resolve/main/gemma-2-2b-it-Q4_K_M.gguf",
-        "size": "1.6 GB", "ram": "4 GB+",
-        "tags": ["popular", "small", "chat"],
-        "desc": "Google's compact instruction model. Clean, fast, and capable.",
-    },
-    {
-        "name":     "Qwen2.5 7B",
-        "badge":    "🌏 Multilingual",
-        "filename": "qwen2.5-7b-instruct-q4_k_m.gguf",
-        "url":      "https://huggingface.co/bartowski/Qwen2.5-7B-Instruct-GGUF/resolve/main/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
-        "size": "4.7 GB", "ram": "8 GB+",
-        "tags": ["multilingual", "chat", "large"],
-        "desc": "Alibaba's multilingual powerhouse. English, Chinese, and many others.",
-    },
-    {
-        "name":     "OpenHermes 2.5 Mistral",
-        "badge":    "🧙 Smart assistant",
-        "filename": "openhermes-2.5-mistral-7b.Q4_K_M.gguf",
-        "url":      "https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/resolve/main/openhermes-2.5-mistral-7b.Q4_K_M.gguf",
+        "name":     "Dolphin Mistral 7B",
+        "badge":    "🐬 Uncensored & direct",
+        "filename": "dolphin-2.2.1-mistral-7b.Q4_K_M.gguf",
+        "url":      "https://huggingface.co/TheBloke/dolphin-2.2.1-mistral-7B-GGUF/resolve/main/dolphin-2.2.1-mistral-7b.Q4_K_M.gguf",
         "size": "4.1 GB", "ram": "8 GB+",
-        "tags": ["popular", "chat", "large"],
-        "desc": "Mistral fine-tuned on high quality instructions. Sharp and reliable.",
-    },
-    {
-        "name":     "Mixtral 8x7B",
-        "badge":    "🚀 Mixture of experts",
-        "filename": "mixtral-8x7b-instruct-v0.1.Q3_K_M.gguf",
-        "url":      "https://huggingface.co/TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF/resolve/main/mixtral-8x7b-instruct-v0.1.Q3_K_M.gguf",
-        "size": "19 GB", "ram": "24 GB+",
-        "tags": ["popular", "large", "chat"],
-        "desc": "Mistral's mixture-of-experts. GPT-4 level. Needs a powerful machine.",
-    },
-    {
-        "name":     "Llava 1.6 Mistral 7B",
-        "badge":    "👁️ Can see images",
-        "filename": "llava-v1.6-mistral-7b.Q4_K_M.gguf",
-        "url":      "https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/llava-v1.6-mistral-7b.Q4_K_M.gguf",
-        "size": "4.4 GB", "ram": "8 GB+",
-        "tags": ["vision", "large"],
-        "desc": "Multimodal — can see and describe images. Show it a photo and ask questions.",
+        "tags": ["uncensored", "chat", "large"],
+        "desc": "Mistral fine-tuned to never refuse. Loyal, direct, completely open.",
     },
 ]
 
 FILTER_TAGS = [
     "all", "popular", "small", "large",
-    "coding", "uncensored", "vision", "multilingual", "chat"
+    "coding", "uncensored", "multilingual", "chat"
 ]
 
 
@@ -901,7 +814,7 @@ class DownloadWindow(ctk.CTkToplevel):
     # ── Download thread ──────────────────────────────────────
 
     def _dl(self, model: dict):
-        dest = os.path.join(MODELS_DIR, model["filename"])
+        dest = os.path.join(MODELS_DIR, os.path.basename(model["filename"]))
         try:
             os.makedirs(MODELS_DIR, exist_ok=True)
             r = requests.get(
