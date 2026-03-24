@@ -65,7 +65,7 @@ def _format_weather(data: dict, location: str) -> str:
             t_max_c  = tomorrow.get("maxtempC", "?")
             t_min_c  = tomorrow.get("mintempC", "?")
             t_desc   = tomorrow["hourly"][4]["weatherDesc"][0].get("value", "?") \
-                       if tomorrow.get("hourly") else "?"
+                       if tomorrow.get("hourly") and len(tomorrow["hourly"]) > 4 else "?"
             lines += [
                 f"  🔮  Tomorrow: {t_min_c}°C – {t_max_c}°C, {t_desc}",
             ]

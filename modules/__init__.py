@@ -28,6 +28,13 @@ _TRIGGERS = {
         r"\brun\s+this\s+command\b",
         r"\bexecute\s+on\s+my\s+computer\b",
     ],
+    "multi_agent": [
+        r"^/scout\b",
+        r"^/plan\b",
+        r"\bsmart\s+scout\b",
+        r"\bmulti[\s-]?step\b",
+        r"\bbreak\s+(this\s+)?down\s+into\s+steps\b",
+    ],
     "weather": [
         r"^/weather\b",
         r"\bweather\s+(in|for|at)\b",

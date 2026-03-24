@@ -6,7 +6,7 @@
 import customtkinter as ctk
 from core import config
 from assets.i18n import t, language_options, display_name_to_code, get_language
-from assets.themes import get as get_theme, display_names
+from assets.themes import get as get_theme, display_names, name_from_display
 
 
 class SettingsPanel(ctk.CTkFrame):
@@ -334,7 +334,6 @@ class SettingsPanel(ctk.CTkFrame):
         ctk.set_appearance_mode("dark" if val else "light")
 
     def _change_theme(self, display: str):
-        from assets.themes import name_from_display
         name = name_from_display(display)
         config.set("theme", name)
         self.app.apply_theme(name)
