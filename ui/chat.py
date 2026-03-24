@@ -5,6 +5,7 @@
 
 import customtkinter as ctk
 from core import config, model_manager, tts
+from core.memory_manager import get_memory_manager
 from assets.i18n import t
 import modules
 
@@ -13,9 +14,8 @@ class ChatPanel(ctk.CTkFrame):
 
     def __init__(self, master, app, theme: dict, **kwargs):
         super().__init__(master, fg_color="transparent", **kwargs)
-        self.app      = app
-        self.theme    = theme
-        self._history = []
+        self.app        = app
+        self.theme      = theme
         self._streaming = False
         self._build()
 
@@ -177,7 +177,7 @@ class ChatPanel(ctk.CTkFrame):
         if t("chat_no_model") in choice or "go to" in choice.lower():
             self.app.switch_panel("Models")
             return
-        self._history = []
+        get_memory_manager().clear()
         self.app.load_model(choice)
 
     # ── Status ───────────────────────────────────────────────
@@ -225,7 +225,7 @@ class ChatPanel(ctk.CTkFrame):
             pass
 
     def clear(self):
-        self._history = []
+        get_memory_manager().clear()
         try:
             self.chat_box.configure(state="normal")
             self.chat_box.delete("1.0", "end")
@@ -264,8 +264,8 @@ class ChatPanel(ctk.CTkFrame):
             self.sys_message(t("chat_no_model"))
             return
 
-        self._history.append({"role": "user", "content": user_msg})
-        self._start_stream(list(self._history))
+        get_memory_manager().add("user", user_msg)
+        self._start_stream(get_memory_manager().get_context())
 
     def _start_stream(self, history: list):
         """Start streaming response."""
@@ -285,8 +285,7 @@ class ChatPanel(ctk.CTkFrame):
 
         def on_complete():
             reply = "".join(full_reply)
-            self._history.append(
-                {"role": "assistant", "content": reply})
+            get_memory_manager().add("assistant", reply)
             self.after(0, self._stream_done)
             if config.get("voice_out") and reply:
                 tts.speak(reply)

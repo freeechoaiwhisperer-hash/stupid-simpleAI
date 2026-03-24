@@ -166,20 +166,27 @@ class IntegrityChecker:
         )
         return manifest
 
+    @property
+    def manifest_exists(self) -> bool:
+        """True if a baseline manifest has been written to disk."""
+        return self._manifest_path.exists()
+
     def verify(self) -> Tuple[bool, list]:
         """
         Compare current file hashes against the saved manifest.
 
         Returns (all_ok, list_of_changed_paths).
-        If the manifest does not exist yet, returns (True, []) and
-        logs a notice.
+
+        Special cases:
+        - If the manifest does not exist, returns (False, ["(no manifest)"])
+          so the caller can distinguish "clean" from "never initialised / deleted".
         """
         if not self._manifest_path.exists():
             logger.info(
                 "IntegrityChecker: no manifest yet — "
                 "run build_or_update() first"
             )
-            return True, []
+            return False, ["(no manifest)"]
 
         try:
             saved = json.loads(

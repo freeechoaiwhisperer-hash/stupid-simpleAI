@@ -35,6 +35,29 @@ def _bootstrap():
     manual_key = config.get("manual_encryption_key", None)
     encryption.init_encryption(manual_key=manual_key)
 
+    # Integrity check — build manifest on first run, verify on every run after
+    try:
+        from modules.security_guard import get_integrity_checker
+        checker = get_integrity_checker()
+        if not config.get("integrity_manifest_built", False) or not checker.manifest_exists:
+            if config.get("integrity_manifest_built", False) and not checker.manifest_exists:
+                logger.warning(
+                    "IntegrityChecker: manifest was deleted since last install — "
+                    "rebuilding from current files (no tampering can be confirmed)"
+                )
+            checker.build_or_update()
+            config.set("integrity_manifest_built", True)
+            logger.info("IntegrityChecker: baseline manifest created")
+        else:
+            ok, changed = checker.verify()
+            if not ok:
+                logger.warning(
+                    f"Startup integrity check: {len(changed)} file(s) "
+                    f"have changed since last verified install: {changed}"
+                )
+    except Exception as _exc:
+        logger.error(f"IntegrityChecker setup failed: {_exc}")
+
 
 if __name__ == "__main__":
     _bootstrap()
