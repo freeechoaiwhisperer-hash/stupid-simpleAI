@@ -24,7 +24,7 @@ def _bootstrap():
     logger.init()
     logger.info("FreedomForge AI starting")
 
-    crash_reporter.install_global_handler()
+    crash_reporter.install_handler()
     manual_key = config.get("manual_encryption_key", None)
     encryption.init_encryption(manual_key=manual_key)
 

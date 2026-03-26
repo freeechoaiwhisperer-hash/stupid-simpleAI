@@ -42,6 +42,9 @@ desktop.ini
 *.swo
 *~
 
+# Encryption key — never commit, private to each machine
+.forge_key
+
 # Logs
 *.log
 logs/
