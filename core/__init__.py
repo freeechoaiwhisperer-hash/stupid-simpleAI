@@ -1,0 +1,1 @@
+# FreedomForge AI — core package
