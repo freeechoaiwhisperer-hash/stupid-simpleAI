@@ -241,8 +241,6 @@ class App(ctk.CTk):
             ("⚙️", t("nav_settings"), "Settings"),
             ("📋", "Terms",           "Terms"),
             ("🪄", t("nav_about"),    "About"),
-            ("🔒", "Privacy",           "Privacy"),
-            ("📋", "Terms",             "Terms"),
         ]
         for icon, label, key in nav_items:
             b = ctk.CTkButton(
@@ -289,8 +287,6 @@ class App(ctk.CTk):
         self.settings_panel = SettingsPanel(self.content_frame, self, T)
         self.terms_panel    = TermsPanel(self.content_frame, T)
         self.about_panel    = AboutPanel(self.content_frame, T)
-        self.privacy_panel  = PrivacyPanel(self.content_frame, self, T)
-        self.terms_panel    = TermsPanel(self.content_frame, T)
 
         self.panels["Chat"]     = self.chat_panel
         self.panels["Models"]   = self.models_panel
@@ -298,8 +294,6 @@ class App(ctk.CTk):
         self.panels["Settings"] = self.settings_panel
         self.panels["Terms"]    = self.terms_panel
         self.panels["About"]    = self.about_panel
-        self.panels["Privacy"]  = self.privacy_panel
-        self.panels["Terms"]    = self.terms_panel
 
         self.switch_panel("Chat")
 
@@ -422,8 +416,6 @@ class App(ctk.CTk):
         self.settings_panel = SettingsPanel(self.content_frame, self, T)
         self.terms_panel    = TermsPanel(self.content_frame, T)
         self.about_panel    = AboutPanel(self.content_frame, T)
-        self.privacy_panel  = PrivacyPanel(self.content_frame, self, T)
-        self.terms_panel    = TermsPanel(self.content_frame, T)
 
         self.panels["Chat"]     = self.chat_panel
         self.panels["Models"]   = self.models_panel
@@ -431,8 +423,6 @@ class App(ctk.CTk):
         self.panels["Settings"] = self.settings_panel
         self.panels["Terms"]    = self.terms_panel
         self.panels["About"]    = self.about_panel
-        self.panels["Privacy"]  = self.privacy_panel
-        self.panels["Terms"]    = self.terms_panel
 
         self.switch_panel(self._current_panel)
         self.update_mode_badge()

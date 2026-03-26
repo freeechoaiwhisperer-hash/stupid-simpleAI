@@ -1,5 +1,5 @@
 # ============================================================
-#  FreedomForge AI — core/logger.py
+#  FreedomForge AI — utils/logger.py
 #  Logging — writes to logs/app.log, rotates at 1MB
 # ============================================================
 

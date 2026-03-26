@@ -1,5 +1,5 @@
 # ============================================================
-#  FreedomForge AI — core/tts.py
+#  FreedomForge AI — core/voice_engine.py
 #  Voice input (speech recognition) and output (TTS)
 # ============================================================
 

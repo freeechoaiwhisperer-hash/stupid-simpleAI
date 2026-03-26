@@ -452,7 +452,7 @@ class SettingsPanel(ctk.CTkFrame):
         dialog.wait_window()
 
         if result[0]:
-            from core.config import DEFAULTS
+            from core.settings_manager import DEFAULTS
             for k, v in DEFAULTS.items():
                 config.set(k, v)
             for w in self.winfo_children():

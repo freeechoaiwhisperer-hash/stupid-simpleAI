@@ -1,5 +1,5 @@
 # ============================================================
-#  FreedomForge AI — modules/video.py
+#  FreedomForge AI — modules/comfyui.py
 #  Video generation module (ComfyUI / Wan2.1)
 # ============================================================
 
