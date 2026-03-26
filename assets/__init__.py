@@ -1,0 +1,1 @@
+# FreedomForge AI — assets package
