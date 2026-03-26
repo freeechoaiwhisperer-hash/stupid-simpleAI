@@ -879,7 +879,10 @@ class ModelsPanel(ctk.CTkFrame):
                 resp.raise_for_status()
                 html = resp.text
 
-                # Extract model names and description snippets
+                # Extract model names by scraping href links.
+                # NOTE: This regex targets the HTML structure of ollama.com/library
+                # as of 2026. If the site layout changes, this pattern may need
+                # to be updated.
                 names = re.findall(
                     r'href="/library/([a-zA-Z0-9_\-\.]+)"', html)
                 # Deduplicate while preserving order
