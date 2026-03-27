@@ -13,7 +13,7 @@ from utils import logger
 from core import encryption
 from core.metadata_stamp import stamp_response, should_stamp
 import modules
-import modules.comfyui as video_module
+import modules.comfyui as comfyui_module
 import modules.agent  as agent_module
 from assets.i18n   import t, set_language, detect_system_language
 from assets.themes import get as get_theme
@@ -45,7 +45,7 @@ class App(ctk.CTk):
         self._theme  = get_theme(theme_name)
 
         # Register modules
-        modules.register("video", video_module)
+        modules.register("video", comfyui_module)
         modules.register("agent", agent_module)
 
         # Window
