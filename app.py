@@ -13,6 +13,7 @@
 
 import sys
 import os
+import platform
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -30,10 +31,48 @@ def _bootstrap():
     manual_key = config.get("manual_encryption_key", None)
     encryption.init_encryption(manual_key=manual_key)
 
+def _import_app():
+    try:
+        from ui.app_window import App as AppWindow
+        return AppWindow
+    except ModuleNotFoundError as exc:
+        if exc.name in {"tkinter", "customtkinter"}:
+            system = platform.system()
+            lines = [
+                "FreedomForge AI could not start because the GUI dependencies are missing.",
+                "",
+            ]
+            if system == "Linux":
+                lines.extend([
+                    "Linux fix:",
+                    "  Run: bash setup.sh",
+                    "  Or install tkinter manually: sudo apt-get install python3-tk",
+                ])
+            elif system == "Darwin":
+                lines.extend([
+                    "macOS fix:",
+                    "  Run: bash setup.sh",
+                    "  Or install Python from python.org / Homebrew with tkinter support.",
+                ])
+            else:
+                lines.extend([
+                    "Windows fix:",
+                    "  Double-click setup.bat",
+                    "  Or reinstall Python from python.org with the standard Tk components.",
+                ])
+            lines.extend([
+                "",
+                f"Missing module: {exc.name}",
+            ])
+            message = "\n".join(lines)
+            logger.error(message)
+            print(message, file=sys.stderr)
+            raise SystemExit(1) from exc
+        raise
 
+
+App = _import_app()
 _bootstrap()
-
-from ui.app_window import App
 
 
 def main():
