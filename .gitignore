@@ -29,6 +29,8 @@ ENV/
 
 # Config — contains user preferences, not shared
 config.json
+.forge_key
+crash_reports/
 
 # OS files
 .DS_Store

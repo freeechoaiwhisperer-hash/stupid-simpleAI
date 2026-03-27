@@ -23,6 +23,38 @@ Or run directly:
 python app.py
 ```
 
+## One-Click Installers
+
+### Windows
+
+Double-click:
+
+```text
+setup.bat
+```
+
+It creates a virtual environment, installs the app, tries optional voice/LLM extras, creates a desktop shortcut, and adds a reusable `launch.bat`.
+
+### Linux and macOS
+
+Run:
+
+```bash
+bash setup.sh
+```
+
+It creates a virtual environment, installs the app, tries optional voice/LLM extras, and adds a reusable `launch.sh`.
+
+- On Linux it also tries to create a desktop shortcut.
+- On macOS it also creates a clickable `FreedomForgeAI.command` launcher on the Desktop.
+
+### Optional features
+
+The base install starts the app. Optional packages are installed on a best-effort basis:
+
+- `SpeechRecognition` + `pyaudio` for microphone input
+- `llama-cpp-python` for local GGUF model loading
+
 ## Project Structure
 
 ```

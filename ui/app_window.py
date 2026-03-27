@@ -20,8 +20,8 @@ from assets.themes import get as get_theme
 
 from ui.chat        import ChatPanel
 from ui.models_tab  import ModelsPanel
-from ui.settings    import SettingsPanel
-from ui.about       import AboutPanel
+from ui.settings_tab import SettingsPanel
+from ui.about_tab   import AboutPanel
 from ui.wizard      import SetupWizard, MIRANDA_QUOTES
 from ui.privacy_tab import PrivacyPanel
 from ui.terms_tab   import TermsPanel, TermsDialog
