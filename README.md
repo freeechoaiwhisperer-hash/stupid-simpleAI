@@ -1,12 +1,7 @@
 # FreedomForge AI
 
-> *"I want to end every paywall and knowledge barrier that stops regular people from having full access to the power of AI and computers."*  
-> — Ryan Dennison, Creator
-
 **FreedomForge AI** is a local AI assistant — no cloud, no account, no subscription.  
 It runs entirely on your machine using open-source models.
-
-Dedicated to Miranda. She will never be forgotten.
 
 ---
 
@@ -95,5 +90,3 @@ FreedomForgeAI/
 AGPL-3.0 + Commons Clause — see `LICENSE.md`
 
 ---
-
-*Note: Planning for this project began in late September/early October 2025.*
