@@ -38,7 +38,7 @@ def is_safe_command(command: str) -> tuple[bool, str]:
     cmd_lower = command.lower().strip()
 
     for blocked in BLOCKED_COMMANDS:
-        if blocked in cmd_lower:
+        if blocked.lower() in cmd_lower:
             return False, f"Command contains blocked pattern: {blocked}"
 
     if cmd_lower.startswith("sudo rm"):
