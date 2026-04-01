@@ -40,9 +40,12 @@ def _eval_expr(node):
 
 
 def safe_eval(expr: str):
-    tree = ast.parse(expr, mode='eval')
+    try:
+        tree = ast.parse(expr, mode='eval')
+    except SyntaxError as e:
+        raise ValueError(f"Invalid syntax in math expression: {e}") from e
     for node in ast.walk(tree):
-        if isinstance(node, ast.Name) and node.id not in ['True', 'False', 'None']:
+        if isinstance(node, ast.Name):
             raise ValueError("Variable names not allowed")
         if isinstance(node, ast.Call):
             raise ValueError("Function calls not allowed")
