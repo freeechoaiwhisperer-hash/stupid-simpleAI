@@ -4,8 +4,10 @@
 # ============================================================
 
 import customtkinter as ctk
+from pathlib import Path
 from core import settings_manager as config, model_manager, voice_engine as tts
 from assets.i18n import t
+from utils.paths import APP_ROOT
 import modules
 from core.metadata_stamp import stamp_response, should_stamp
 
@@ -351,6 +353,71 @@ class ChatPanel(ctk.CTkFrame):
             self.sys_message(t("chat_voice_missing"))
             return
 
+        warn_file = Path(APP_ROOT) / ".voice_warning_shown"
+        if not warn_file.exists():
+            T = self.theme
+            consent = ctk.CTkToplevel(self)
+            consent.title("Voice Input Privacy")
+            consent.geometry("480x280")
+            consent.resizable(False, False)
+            consent.configure(fg_color=T["bg_panel"])
+            consent.transient(self.winfo_toplevel())
+            consent.grab_set()
+
+            ctk.CTkLabel(
+                consent,
+                text="Voice Input Uses Google Cloud",
+                font=("Arial", 14, "bold"),
+                text_color=T["gold"],
+            ).pack(pady=(20, 8))
+
+            ctk.CTkLabel(
+                consent,
+                text=(
+                    "FreedomForge AI uses Google's speech recognition service for voice input.\n\n"
+                    "This sends your voice data to Google's servers. No personal data is stored,\n"
+                    "but your audio is processed externally.\n\n"
+                    "You can still use the app without voice input, or use an offline engine\n"
+                    "(coming soon).\n\n"
+                    "Do you want to enable voice input?"
+                ),
+                font=("Arial", 12),
+                text_color=T["text_secondary"],
+                wraplength=440,
+                justify="center",
+            ).pack(pady=12, padx=20)
+
+            def enable():
+                warn_file.touch()
+                consent.destroy()
+                self._start_voice()
+
+            def disable():
+                consent.destroy()
+
+            btn_frame = ctk.CTkFrame(consent, fg_color="transparent")
+            btn_frame.pack(pady=16)
+
+            ctk.CTkButton(
+                btn_frame, text="Yes, Enable Voice",
+                width=160, height=38,
+                fg_color=T["accent"], hover_color=T["accent_hover"],
+                command=enable,
+            ).pack(side="left", padx=8)
+
+            ctk.CTkButton(
+                btn_frame, text="No, Keep Off",
+                width=140, height=38,
+                fg_color=T["bg_hover"], hover_color=T["bg_card"],
+                text_color=T["text_secondary"],
+                command=disable,
+            ).pack(side="left", padx=8)
+
+            return
+
+        self._start_voice()
+
+    def _start_voice(self):
         self.set_status("listening")
         self.mic_btn.configure(
             text=t("chat_listening"),

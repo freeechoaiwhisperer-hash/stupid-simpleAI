@@ -18,6 +18,7 @@ DEFAULTS = {
     "unlocked":       False,
     "personality":    "normal",
     "agent_enabled":  False,
+    "terms_accepted": False,
 }
 
 _config: dict = {}

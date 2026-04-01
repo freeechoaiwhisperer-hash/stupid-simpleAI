@@ -5,6 +5,7 @@
 
 import os
 import json
+import base64
 import hashlib
 import secrets
 import subprocess
@@ -61,10 +62,11 @@ def get_or_create_key(custom_key: str = None) -> Optional[bytes]:
         return None
 
     if custom_key:
-        # Derive key from user passphrase
-        key_bytes = hashlib.sha256(
-            custom_key.encode()).digest()
-        return key_bytes[:32]
+        key_bytes = hashlib.sha256(custom_key.encode()).digest()
+        key = base64.urlsafe_b64encode(key_bytes)
+        save_key(key)
+        logger.info("Custom encryption key set")
+        return key
 
     existing = load_key()
     if existing:

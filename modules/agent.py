@@ -68,9 +68,9 @@ def run_command(
             return
 
         try:
+            args = shlex.split(command)
             result = subprocess.run(
-                command,
-                shell=True,
+                args,
                 capture_output=True,
                 text=True,
                 timeout=30,

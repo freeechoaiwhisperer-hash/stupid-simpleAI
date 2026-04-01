@@ -5,7 +5,7 @@
 
 import threading
 import customtkinter as ctk
-from core import privacy
+from core import privacy, encryption
 from core.crash_reporter import get_recent, send_anonymous
 
 
@@ -102,6 +102,7 @@ class PrivacyPanel(ctk.CTkFrame):
     def _rotate(self):
         key = privacy.generate_key()
         privacy.save_key(key)
+        encryption.init_encryption()
         self._notify(f"🔄  Key rotated.\n{privacy.get_key_fingerprint(key)}")
         self._rebuild()
 

@@ -182,6 +182,7 @@ class TermsDialog(ctk.CTkToplevel):
         super().__init__(parent)
         self.on_accept  = on_accept
         self.on_decline = on_decline
+        self.theme      = theme
         T               = theme
 
         self.title("FreedomForge AI — Terms of Service")

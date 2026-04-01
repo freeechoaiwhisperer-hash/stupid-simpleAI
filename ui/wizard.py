@@ -8,6 +8,7 @@ import queue
 import random
 import shutil
 import threading
+import tkinter as tk
 from tkinter import filedialog
 
 import customtkinter as ctk
