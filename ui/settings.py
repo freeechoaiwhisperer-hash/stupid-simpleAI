@@ -4,6 +4,7 @@
 # ============================================================
 
 import os
+import threading
 import customtkinter as ctk
 from core import config
 from assets.i18n import t, language_options, display_name_to_code, get_language
@@ -390,7 +391,6 @@ class SettingsPanel(ctk.CTkFrame):
                     text=f"  ✅ Adapter active: {choice}",
                     text_color=T.get("green", "#44ff88")))
 
-            import threading
             threading.Thread(target=_run, daemon=True).start()
 
         except Exception as exc:
