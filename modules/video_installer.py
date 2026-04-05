@@ -218,9 +218,8 @@ def install(
             # ── Step 4: GPU + model ───────────────────────────
             on_log("Step 4/5 — Detecting GPU and selecting model…")
             vram  = _detect_vram()
-            on_log(f"  Detected VRAM: {vram:.1f} GB → ", )
             model = _select_model(vram)
-            on_log(f"using {model['label']}")
+            on_log(f"  Detected VRAM: {vram:.1f} GB → using {model['label']}")
             os.makedirs(MODELS_DIR, exist_ok=True)
             dest_model = os.path.join(MODELS_DIR, model["filename"])
             _download_model(model, dest_model, on_log)
